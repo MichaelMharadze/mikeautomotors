@@ -33,7 +33,7 @@ function ManageCars() {
   const fetchCars = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await axios.get("https://mikeautomotors-backend.onrender.com/api/cars", {
+      const res = await axios.get("http://localhost:5000/api/cars", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCars(res.data);
@@ -57,7 +57,7 @@ function ManageCars() {
     formData.append("image", file);
 
     try {
-      const res = await axios.post("https://mikeautomotors-backend.onrender.com/api/upload", formData);
+      const res = await axios.post("http://localhost:5000/api/upload", formData);
       setCar((prev) => ({ ...prev, image: res.data.imageUrl }));
     } catch (err) {
       console.error("Image upload failed:", err);
@@ -77,7 +77,7 @@ function ManageCars() {
     ) {
       try {
         const token = localStorage.getItem("adminToken");
-        const res = await axios.post("https://mikeautomotors-backend.onrender.com/api/cars", car, {
+        const res = await axios.post("http://localhost:5000/api/cars", car, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -109,7 +109,7 @@ function ManageCars() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      await axios.delete(`https://mikeautomotors-backend.onrender.com/api/cars/${id}`, {
+      await axios.delete(`http://localhost:5000/api/cars/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCars((prev) => prev.filter((car) => car._id !== id));

@@ -21,7 +21,7 @@ function HomePage() {
 
   useEffect(() => {
   axios
-    .get('https://mikeautomotors-backend.onrender.com/api/cars')
+    .get('http://localhost:5000/api/cars')
     .then((res) => {
       console.log('Fetched cars:', res.data);  // Debug log
       setCars(res.data);
@@ -56,7 +56,7 @@ const fetchFilteredCars = () => {
     make: makeFilter
   }).toString();
 
-  fetch(`https://mikeautomotors-backend.onrender.com/cars/search?${query}`)
+  fetch(`http://localhost:5000/api/cars/search?${query}`)
     .then(res => res.json())
     .then(data => setFilteredCars(data))
     .catch(err => console.error('Search failed', err));

@@ -16,7 +16,7 @@ function Dashboard() {
     } else {
       // Optional: validate token with backend
       axios
-        .post('https://mikeautomotors-backend.onrender.com/api/admin/verify', { token })
+        .post('http://localhost:5000/api/admin/verify', { token })
         .then((res) => {
           if (res.data.valid) setIsAuthorized(true);
           else navigate('/admin-login');
