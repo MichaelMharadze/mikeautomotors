@@ -74,8 +74,6 @@ app.get('/api/cars/search', async (req, res) => {
   }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -115,8 +113,10 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     return res.status(400).json({ message: 'No file uploaded' });
   }
 
-  res.json({ imageUrl: `http://localhost:5000/uploads/${req.file.filename}` });
-});
+  const baseUrl = req.protocol + '://' + req.get('host');
+  res.json({ imageUrl: `${baseUrl}/uploads/${req.file.filename}` });
+}); // ← this was missing!
+
 
 
 // Middleware to verify admin token from Authorization header
@@ -243,14 +243,7 @@ app.get('/api/cars/search', async (req, res) => {
   }
 });
 
-app.get('/api/cars', verifyAdminToken, async (req, res) => {
-  try {
-    const cars = await Car.find();
-    res.json(cars);
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to load cars' });
-  }
-});
+
 
 // ADD NEW CAR (Admin only)
 app.post('/api/cars', verifyAdminToken, async (req, res) => {
@@ -276,6 +269,17 @@ app.post('/api/cars', verifyAdminToken, async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log('✅ Server running on http://localhost:5000');
+
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, 'client', 'build')));
+
+// Serve index.html for all other routes (React Router support)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+});
+
